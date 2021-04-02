@@ -20,16 +20,16 @@ public class Produto {
 	@Column
 	private float valor;
 	@Column
-	private String imagemUrl;
+	private String imagem;
 
 	Produto() {
 	}
 
-	Produto(String nome, String descricao, float valor, String imagemUrl) {
+	Produto(String nome, String descricao, float valor, String imagem) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.valor = valor;
-		this.imagemUrl = imagemUrl;
+		this.imagem = imagem;
 	}
 
 	public Long getId() {
@@ -39,7 +39,7 @@ public class Produto {
 	public String getNome() {
 		return this.nome;
 	}
-
+	
 	public String getDescricao() {
 		return this.descricao;
 	}
@@ -48,8 +48,8 @@ public class Produto {
 		return this.valor;
 	}
 
-	public String getImagemUrl() {
-		return this.imagemUrl;
+	public String getImagem() {
+		return this.imagem;
 	}
 
 	public void setNome(String nome) {
@@ -64,7 +64,11 @@ public class Produto {
 		this.valor = valor;
 	}
 
-	public void setImagemUrl(String imagemUrl) {
-		this.imagemUrl = imagemUrl;
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
+	}
+	
+	public String getImagemPath() {
+		return this.imagem == null ? null : "/imagens-produtos/" + this.id; 
 	}
 }

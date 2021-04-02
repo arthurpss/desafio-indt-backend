@@ -1,16 +1,22 @@
 package desafio.indt;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import desafio.indt.util.FileUtils;
 
 @RestController
 public class ProdutoController {
@@ -30,8 +36,15 @@ public class ProdutoController {
 	}
 
 	@PostMapping("/produto")
-	public Produto addProduto(@RequestBody Produto produto) {
-		return produtoRepository.save(produto);
+	public Produto addProduto(@RequestPart("produto") Produto produto, @RequestPart("file") MultipartFile file)
+			throws IOException {
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		produto.setImagem(fileName);
+		Produto produtoCriado = produtoRepository.save(produto);
+
+		String uploadDir = System.getProperty("user.dir").concat("/imagens-produtos/" + produtoCriado.getId());
+		FileUtils.saveFile(uploadDir, fileName, file);
+		return produtoCriado;
 	}
 
 	@PutMapping("/produto/{id}")
@@ -40,7 +53,7 @@ public class ProdutoController {
 		Produto novoProduto = produto.get();
 		novoProduto.setNome(produtoDetails.getNome());
 		novoProduto.setDescricao(produtoDetails.getDescricao());
-		novoProduto.setImagemUrl(produtoDetails.getImagemUrl());
+		novoProduto.setImagem(produtoDetails.getImagem());
 		novoProduto.setValor(produtoDetails.getValor());
 		return produtoRepository.save(novoProduto);
 	}
