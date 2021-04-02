@@ -1,5 +1,6 @@
 package desafio.indt.util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,9 +20,10 @@ public class FileUtils {
 	public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
 		Path uploadPath = Paths.get(uploadDir);
 
-		if (!Files.exists(uploadPath)) {
-			Files.createDirectories(uploadPath);
+		if (Files.exists(uploadPath)) {
+			cleanDirectory(uploadPath);
 		}
+		Files.createDirectories(uploadPath);
 
 		try (InputStream inputStream = multipartFile.getInputStream()) {
 			Path filePath = uploadPath.resolve(fileName);
@@ -43,5 +46,9 @@ public class FileUtils {
 		} catch (MalformedURLException ex) {
 			throw new FileNotFoundException("File not found " + fileName);
 		}
+	}
+
+	public static void cleanDirectory(Path pathToBeDeleted) throws IOException {
+		Files.walk(pathToBeDeleted).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
 	}
 }

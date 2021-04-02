@@ -1,6 +1,8 @@
 package desafio.indt;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,18 +86,31 @@ public class ProdutoController {
 	}
 
 	@PutMapping("/produto/{id}")
-	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestBody Produto produtoDetails) {
+	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestPart("produto") Produto produtoDetails,
+			@RequestPart("file") MultipartFile file) throws IOException {
 		Optional<Produto> produto = produtoRepository.findById(id);
-		Produto novoProduto = produto.get();
-		novoProduto.setNome(produtoDetails.getNome());
-		novoProduto.setDescricao(produtoDetails.getDescricao());
-		novoProduto.setImagem(produtoDetails.getImagem());
-		novoProduto.setValor(produtoDetails.getValor());
-		return produtoRepository.save(novoProduto);
+		if (produto.isPresent()) {
+			Produto novoProduto = produto.get();
+			novoProduto.setNome(produtoDetails.getNome());
+			novoProduto.setDescricao(produtoDetails.getDescricao());
+			novoProduto.setValor(produtoDetails.getValor());
+			String uploadDir = System.getProperty("user.dir").concat("/imagens-produtos/" + novoProduto.getId());
+			if (!file.isEmpty()) {
+				String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+				FileUtils.saveFile(uploadDir, fileName, file);
+				novoProduto.setImagem(fileName);
+			}
+
+			return produtoRepository.save(novoProduto);
+		}
+		return produtoDetails;
 	}
 
 	@DeleteMapping("/produto/{id}")
-	public void deleteProduto(@PathVariable(value = "id") Long id) {
+	public void deleteProduto(@PathVariable(value = "id") Long id) throws IOException {
 		produtoRepository.deleteById(id);
+		String dir = System.getProperty("user.dir").concat("/imagens-produtos/" + id);
+		Path imagens = Paths.get(dir);
+		FileUtils.cleanDirectory(imagens);
 	}
 }
