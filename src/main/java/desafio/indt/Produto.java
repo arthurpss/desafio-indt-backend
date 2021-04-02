@@ -67,8 +67,4 @@ public class Produto {
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
 	}
-	
-	public String getImagemPath() {
-		return this.imagem == null ? null : "/imagens-produtos/" + this.id; 
-	}
 }

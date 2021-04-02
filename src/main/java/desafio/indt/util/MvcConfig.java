@@ -13,7 +13,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		exposeDirectory(System.getProperty("user.dir").concat("/imagens-produtos/"), registry);
+		exposeDirectory(System.getProperty("user.dir").concat("/imagens-produtos"), registry);
 	}
 	
 	@Override
@@ -24,7 +24,6 @@ public class MvcConfig implements WebMvcConfigurer {
 	private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {
 		Path uploadDir = Paths.get(dirName);
 		String uploadPath = uploadDir.toFile().getAbsolutePath();
-		System.out.println(uploadPath);
 
 		if (dirName.startsWith("../"))
 			dirName = dirName.replace("../", "");
