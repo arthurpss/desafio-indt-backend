@@ -13,9 +13,9 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Column
+	@Column()
 	private String nome;
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String descricao;
 	@Column
 	private float valor;
