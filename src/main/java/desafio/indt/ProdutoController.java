@@ -86,19 +86,21 @@ public class ProdutoController {
 	}
 
 	@PutMapping("/produto/{id}")
-	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestPart("produto") Produto produtoDetails,
-			@RequestPart("file") MultipartFile file) throws IOException {
+	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestPart(name = "produto", required = false) Produto produtoDetails,
+			@RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
 		Optional<Produto> produto = produtoRepository.findById(id);
-		if (produto.isPresent()) {
+		if (produtoDetails != null && produto.isPresent()) {
 			Produto novoProduto = produto.get();
 			novoProduto.setNome(produtoDetails.getNome());
 			novoProduto.setDescricao(produtoDetails.getDescricao());
 			novoProduto.setValor(produtoDetails.getValor());
 			String uploadDir = System.getProperty("user.dir").concat("/imagens-produtos/" + novoProduto.getId());
-			if (!file.isEmpty()) {
+			if (file != null) {
 				String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 				FileUtils.saveFile(uploadDir, fileName, file);
 				novoProduto.setImagem(fileName);
+			} else {
+				novoProduto.setImagem(novoProduto.getImagem());
 			}
 
 			return produtoRepository.save(novoProduto);
