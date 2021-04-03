@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,18 +37,21 @@ public class ProdutoController {
 	ProdutoRepository produtoRepository;
 
 	@ApiOperation(value = "Retorna todos os produtos cadastrados")
+	@CrossOrigin
 	@GetMapping("/produtos")
 	public List<Produto> getProdutos() {
 		return produtoRepository.findAll();
 	}
 	
 	@ApiOperation(value = "Retorna o produto pelo Id")
+	@CrossOrigin
 	@GetMapping("/produto/{id}")
 	public Optional<Produto> getProduto(@PathVariable Long id) {
 		return produtoRepository.findById(id);
 	}
 
 	@ApiOperation(value = "Retorna imagem pelo Id do produto")
+	@CrossOrigin
 	@GetMapping("/imagem/produto/{id}")
 	public ResponseEntity<Resource> getImagem(@PathVariable Long id, @RequestHeader("fileName") String fileName,
 			HttpServletRequest request) {
@@ -80,6 +84,7 @@ public class ProdutoController {
 	}
 
 	@ApiOperation(value = "Cria produto")
+	@CrossOrigin
 	@PostMapping("/produto")
 	public Produto addProduto(@RequestPart("produto") Produto produto, @RequestPart("file") MultipartFile file)
 			throws IOException {
@@ -93,6 +98,7 @@ public class ProdutoController {
 	}
 
 	@ApiOperation(value = "Atualiza o produto com o Id informado")
+	@CrossOrigin
 	@PutMapping("/produto/{id}")
 	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestPart(name = "produto", required = false) Produto produtoDetails,
 			@RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
@@ -117,6 +123,7 @@ public class ProdutoController {
 	}
 
 	@ApiOperation(value = "Deleta o produto com o Id informado")
+	@CrossOrigin
 	@DeleteMapping("/produto/{id}")
 	public void deleteProduto(@PathVariable(value = "id") Long id) throws IOException {
 		produtoRepository.deleteById(id);

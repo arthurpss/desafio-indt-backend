@@ -7,21 +7,5 @@ services:
     environment:
     - MYSQL_ROOT_PASSWORD=123
     - MYSQL_DATABASE=desafio
-    expose:
-    - '3306'
     ports:
     - 3306:3306
-  spring:
-    container_name: spring
-    image: spring
-    restart: on-failure
-    build:
-      context: ./
-    depends_on:
-    - db
-    ports:
-    - 8080:8080
-    environment:
-    - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/desafio?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-    - SPRING_DATASOURCE_USERNAME=root
-    - SPRING_DATASOURCE_PASSWORD=123
