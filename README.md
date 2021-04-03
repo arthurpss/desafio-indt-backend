@@ -21,7 +21,7 @@
     - frontend: https://github.com/arthurpss/desafio-indt.git
 - Rodar no diretório onde o **backend** foi clonado:
     - docker-compose up -d
-    - mvn spring:boot run
+    - mvn spring-boot:run
 - Rodar no diretório onde o **frontend** foi clonado:
     - npm install
     - npm start
