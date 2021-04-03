@@ -1,4 +1,4 @@
-package desafio.indt.util;
+package desafio.indt;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +14,11 @@ public class MvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		exposeDirectory(System.getProperty("user.dir").concat("/imagens-produtos"), registry);
+//		registry.addResourceHandler("swagger-ui.html")
+//	      .addResourceLocations("classpath:/META-INF/resources/");
+//
+//	    registry.addResourceHandler("/webjars/**")
+//	      .addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 	
 	@Override

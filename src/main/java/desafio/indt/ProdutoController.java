@@ -25,23 +25,29 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import desafio.indt.util.FileUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
+@Api(value = "Produto")
 public class ProdutoController {
 
 	@Autowired
 	ProdutoRepository produtoRepository;
 
+	@ApiOperation(value = "Retorna todos os produtos cadastrados")
 	@GetMapping("/produtos")
 	public List<Produto> getProdutos() {
 		return produtoRepository.findAll();
 	}
-
+	
+	@ApiOperation(value = "Retorna o produto pelo Id")
 	@GetMapping("/produto/{id}")
 	public Optional<Produto> getProduto(@PathVariable Long id) {
 		return produtoRepository.findById(id);
 	}
 
+	@ApiOperation(value = "Retorna imagem pelo Id do produto")
 	@GetMapping("/imagem/produto/{id}")
 	public ResponseEntity<Resource> getImagem(@PathVariable Long id, @RequestHeader("fileName") String fileName,
 			HttpServletRequest request) {
@@ -73,6 +79,7 @@ public class ProdutoController {
 
 	}
 
+	@ApiOperation(value = "Cria produto")
 	@PostMapping("/produto")
 	public Produto addProduto(@RequestPart("produto") Produto produto, @RequestPart("file") MultipartFile file)
 			throws IOException {
@@ -85,6 +92,7 @@ public class ProdutoController {
 		return produtoCriado;
 	}
 
+	@ApiOperation(value = "Atualiza o produto com o Id informado")
 	@PutMapping("/produto/{id}")
 	public Produto updateProduto(@PathVariable(value = "id") Long id, @RequestPart(name = "produto", required = false) Produto produtoDetails,
 			@RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
@@ -108,6 +116,7 @@ public class ProdutoController {
 		return produtoDetails;
 	}
 
+	@ApiOperation(value = "Deleta o produto com o Id informado")
 	@DeleteMapping("/produto/{id}")
 	public void deleteProduto(@PathVariable(value = "id") Long id) throws IOException {
 		produtoRepository.deleteById(id);
